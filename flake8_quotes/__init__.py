@@ -1,4 +1,5 @@
 import tokenize
+import warnings
 
 import pep8
 
@@ -30,7 +31,7 @@ class QuoteChecker(object):
 
     @classmethod
     def add_options(cls, parser):
-        parser.add_option('--quotes', action='store', dest='inline_quotes',
+        parser.add_option('--quotes', action='store',
                           help='Deprecated alias for `--inline-quotes`')
         parser.add_option('--inline-quotes', default='\'', action='store',
                           help='Quote to expect in all files (default: \')')
@@ -38,7 +39,11 @@ class QuoteChecker(object):
 
     @classmethod
     def parse_options(cls, options):
-        if not hasattr(options, 'inline_quotes') and hasattr(options, 'quotes'):
+        # DEV: `options.quotes` seems to always be defined (even when not passed on the CLI)
+        if options.quotes:
+            # https://docs.python.org/2/library/warnings.html#warnings.warn
+            warnings.warn('flake8-quotes has deprecated `quotes` in favor of `inline-quotes`. '
+                          'Please update your configugration')
             cls.inline_quotes = cls.INLINE_QUOTES[options.quotes]
         else:
             cls.inline_quotes = cls.INLINE_QUOTES[options.inline_quotes]
