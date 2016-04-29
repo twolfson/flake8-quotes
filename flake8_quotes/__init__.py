@@ -39,8 +39,7 @@ class QuoteChecker(object):
 
     @classmethod
     def parse_options(cls, options):
-        # DEV: `options.quotes` seems to always be defined (even when not passed on the CLI)
-        if options.quotes:
+        if hasattr(options, 'quotes') and options.quotes is not None:
             # https://docs.python.org/2/library/warnings.html#warnings.warn
             warnings.warn('flake8-quotes has deprecated `quotes` in favor of `inline-quotes`. '
                           'Please update your configugration')
