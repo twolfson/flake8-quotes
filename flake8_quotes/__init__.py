@@ -2,7 +2,14 @@ import optparse
 import tokenize
 import warnings
 
-from flake8.engine import pep8
+# Polyfill stdin loading
+# https://gitlab.com/pycqa/flake8-polyfill/blob/1.0.1/src/flake8_polyfill/stdin.py#L52-57
+try:
+    from flake8.engine import pep8
+    stdin_get_value = pep8.stdin_get_value
+except ImportError:
+    from flake8 import utils
+    stdin_get_value = utils.stdin_get_value
 
 from flake8_quotes.__about__ import __version__
 
@@ -74,7 +81,7 @@ class QuoteChecker(object):
 
     def get_file_contents(self):
         if self.filename in ('stdin', '-', None):
-            return pep8.stdin_get_value().splitlines(True)
+            return stdin_get_value().splitlines(True)
         else:
             return pep8.readlines(self.filename)
 
