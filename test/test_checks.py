@@ -1,18 +1,7 @@
 from flake8_quotes import QuoteChecker
 import os
 import subprocess
-from unittest import expectedFailure, TestCase
-
-
-FLAKE8_VERSION = os.environ.get('FLAKE8_VERSION', '2')
-
-
-def expectedFailureIf(condition):
-    """Only expect failure if condition applies."""
-    if condition:
-        return expectedFailure
-    else:
-        return lambda func: func
+from unittest import TestCase
 
 
 class TestChecks(TestCase):
@@ -22,7 +11,6 @@ class TestChecks(TestCase):
 
 
 class TestFlake8Stdin(TestCase):
-    @expectedFailureIf(FLAKE8_VERSION == '3')
     def test_stdin(self):
         """Test using stdin."""
         filepath = get_absolute_path('data/doubles.py')
